@@ -1,0 +1,107 @@
+{
+  "id": "1465416",
+  "name": "form",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1335549",
+      "name": "上拉",
+      "font_class": "plus-select-up",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "1335550",
+      "name": "下拉",
+      "font_class": "plus-select-down",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "1833856",
+      "name": "对勾",
+      "font_class": "duigou",
+      "unicode": "e733",
+      "unicode_decimal": 59187
+    },
+    {
+      "icon_id": "2207114",
+      "name": "file_pic",
+      "font_class": "img",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "3616083",
+      "name": "file_pdf",
+      "font_class": "pdf",
+      "unicode": "e6fe",
+      "unicode_decimal": 59134
+    },
+    {
+      "icon_id": "3616084",
+      "name": "file_ppt",
+      "font_class": "ppt",
+      "unicode": "e6ff",
+      "unicode_decimal": 59135
+    },
+    {
+      "icon_id": "3616086",
+      "name": "file_rarzip",
+      "font_class": "zip",
+      "unicode": "e700",
+      "unicode_decimal": 59136
+    },
+    {
+      "icon_id": "3616087",
+      "name": "file_txt",
+      "font_class": "txt",
+      "unicode": "e701",
+      "unicode_decimal": 59137
+    },
+    {
+      "icon_id": "3616091",
+      "name": "file_word",
+      "font_class": "doc",
+      "unicode": "e702",
+      "unicode_decimal": 59138
+    },
+    {
+      "icon_id": "3616092",
+      "name": "file_unknow",
+      "font_class": "unknow",
+      "unicode": "e703",
+      "unicode_decimal": 59139
+    },
+    {
+      "icon_id": "3650764",
+      "name": "file_excel",
+      "font_class": "excel",
+      "unicode": "e704",
+      "unicode_decimal": 59140
+    },
+    {
+      "icon_id": "11364923",
+      "name": "对勾",
+      "font_class": "duigou-copy",
+      "unicode": "e734",
+      "unicode_decimal": 59188
+    },
+    {
+      "icon_id": "11527429",
+      "name": "file_rarzip",
+      "font_class": "rar",
+      "unicode": "e735",
+      "unicode_decimal": 59189
+    },
+    {
+      "icon_id": "11531674",
+      "name": "file_word",
+      "font_class": "docx",
+      "unicode": "e736",
+      "unicode_decimal": 59190
+    }
+  ]
+}
