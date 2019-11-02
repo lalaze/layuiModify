@@ -545,7 +545,6 @@
   };
 
   win.layui = new Layui();
-  // 这个路径现在是笨比写死的，以后要换方法，或者把这个引入放进里面
   document.write('<script src="dist/css/modules/icon/iconfont.js"></script>')
   
 }(window);

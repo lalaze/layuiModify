@@ -202,12 +202,12 @@ layui.define(['layer', 'laytpl'], function (exports) {
   //执行上传
   Class.prototype.upload = function (files, type) {
     // var there = this;
-    // var filefile = there.elemFile[0];
+    // var filefile = there.elemFile[0]
+
     var that = this,
       options = that.config,
-      elemFile = that.elemFile[0]
+      elemFile = that.elemFile[0],
       //高级浏览器处理方式，支持跨域
-      ,
       ajaxSend = function () {
         var successful = 0,
           aborted = 0,
@@ -230,8 +230,12 @@ layui.define(['layer', 'laytpl'], function (exports) {
           layui.each(options.data, function (key, value) {
             value = typeof value === 'function' ? value() : value;
             formData.append(key, value);
-          });
-
+          });  
+          if ((options.fileId !== undefined)&&(options.serverUrl !== undefined)) {
+            console.log('进来了');
+            options.saveUrl = options.url;  //要找个变量放他
+            options.url = options.serverUrl;
+          }
           //提交文件
           $.ajax({
             url: options.url,
@@ -246,9 +250,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
             success: function (res) {
                 successful++;
                 done(index, res);
-                if (that.config.fileNameEchoDisplay !== undefined) {
+                if (options.urlCallback !== undefined) {
                   urlCallback(index, res);
-                }
+                };
                 allDone();
               }
               //异常回调
@@ -333,76 +337,56 @@ layui.define(['layer', 'laytpl'], function (exports) {
             return that.msg('请对上传接口返回有效JSON');
           }
         };
-        console.log((options.serverUrl));
-        console.log(res.data);
-        // 请求url
-        if (options.serverUrl !== undefined) {
-          $.ajax({
-            url: options.serverUrl + '?fileId=' + res.data,
-            type: 'get',
-            contentType: false,
-            processData: false,
-            headers: options.headers || {}
-              //成功回调
-              ,
-            success: function (res) {
-                console.log(res);
-                if (res.code === 0) {
-                  // 重新添加也删除
-                  $("#fileNameEchoDisplay").remove();
-                  // 删除按钮事件以防重复绑定
-                  $(options.deleteBtnId).unbind("click");
-                  // 拿文件后缀名拿图标
-                  value = value.length === 0 ?
-                    ((elemFile.value.match(/[^\/\\]+\..+/g) || []) || '') :
-                    value;
-                  var fileLastName = String(value);
-                  fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
-                  // 拼个对象吧
-                  if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
-                    // 懒只弄一个图标
-                    fileLastName = 'img';
-                  }
-                  var templateDate = {
-                    icon: fileLastName,
-                    url: res.data.url,
-                    name: String(value)
-                  }
-                  var template = '<span style="display:block;margin:5px;" id="fileNameEchoDisplay">' +
-                    '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
-                    '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
-                  laytpl(template).render(templateDate, function (html) {
-                    options.elem.before(html);
-                    // 绑定删除事件
-                    deleteEchoDisplay();
-                  });
+        $.ajax({
+          url: options.serverUrl+ '?fileId=' + res.data,
+          type: 'get',
+          contentType: false,
+          processData: false,
+          headers: options.headers || {}
+            //成功回调
+            ,
+          success: function (result) {
+              if (result.code === 0) {
+                // 重新添加也删除
+                res.serverUrl = result;
+
+                $("#fileNameEchoDisplay").remove();
+                // 删除按钮事件以防重复绑定
+                $(options.deleteBtnId).unbind("click");
+                // 拿文件后缀名拿图标
+                value = value.length === 0 ?
+                  ((elemFile.value.match(/[^\/\\]+\..+/g) || []) || '') :
+                  value;
+                var fileLastName = String(value);
+                fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
+                // 拼个对象吧
+                if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
+                  // 懒只弄一个图标
+                  fileLastName = 'img';
                 }
+                var templateDate = {
+                  icon: fileLastName,
+                  url: result.data.url,
+                  name: String(value)
+                }
+                var template = '<span style="display:block;margin:5px;" id="fileNameEchoDisplay">' +
+                  '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
+                  '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
+                laytpl(template).render(templateDate, function (html) {
+                  options.elem.before(html);
+                  // 绑定删除事件
+                  deleteEchoDisplay();
+                });
               }
-              //异常回调
-              ,
-            error: function () {
-              that.msg('请求上传接口出现异常');
-              error(index);
             }
-          });
-        }
-        typeof options.urlCallback === 'function' && options.urlCallback(res, index || 0, function (files) {
-          that.upload(files);
-        });
-      },
-      // 二次请求拿url然后渲染出来
-      serverUrlCallback = function () {
-        that.elemFile.next('.' + ELEM_CHOOSE).remove();
-        elemFile.value = '';
-        if (typeof res !== 'object') {
-          try {
-            res = JSON.parse(res);
-          } catch (e) {
-            res = {};
-            return that.msg('请对上传接口返回有效JSON');
+            //异常回调
+            ,
+          error: function () {
+            that.msg('请求上传接口出现异常');
+            error(index);
           }
-        }
-        typeof options.fileNameEchoDisplay === 'function' && options.fileNameEchoDisplay(res, index || 0, function (files) {
+        });
+        typeof options.urlCallback=== 'function' && options.urlCallback(res, index || 0, function (files) {
           that.upload(files);
         });
       },
@@ -489,6 +473,10 @@ layui.define(['layer', 'laytpl'], function (exports) {
         }
 
         ajaxSend();
+        // if (options.serverUrl !== undefined) {
+        //   setTimeout(ajaxSend(),0);
+        // }
+
       }
 
     //校验文件格式
