@@ -34,12 +34,12 @@ var argv = require('minimist')(process.argv.slice(2), {
 
 //发行版本目录
 ,releaseDir = './release/zip/layui-v' + pkg.version
-,release = releaseDir + '/layui'
+,release = releaseDir + '/layuiModify'
 
 //目标木
 ,destDir = function(ver){
   return ver ? release : function(){
-    return argv.rc ? 'rc' : 'dist'
+    return argv.rc ? 'rc' : 'dist/layui'
   }();
 }
 

@@ -558,6 +558,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
         }
         break;
     }
+    console.log(options);
     //检验文件数量
     that.fileLength = function () {
       var length = 0,
