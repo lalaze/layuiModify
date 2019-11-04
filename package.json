@@ -23,9 +23,13 @@
   ],
   "homepage": "https://www.layui.com",
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "chai": "^4.1.1",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.0 ",
     "gulp-header": "^1.8.8",
     "gulp-if": "^2.0.1",

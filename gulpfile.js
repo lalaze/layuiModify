@@ -15,6 +15,7 @@ var del = require('del');
 var gulpif = require('gulp-if');
 var minimist = require('minimist');
 var zip = require('gulp-zip');
+var babel = require('gulp-babel');
 
 //获取参数
 var argv = require('minimist')(process.argv.slice(2), {
@@ -67,7 +68,7 @@ var argv = require('minimist')(process.argv.slice(2), {
       src.push('!./src/lay/**/layim.js');
     }
 
-    return gulp.src(src).pipe(uglify())
+    return gulp.src(src).pipe(babel()).pipe(uglify())
      .pipe(header.apply(null, note))
     .pipe(gulp.dest('./'+ dir));
   }
@@ -82,7 +83,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     ]
     ,dir = destDir(ver);
     
-    return gulp.src(src).pipe(uglify())
+    return gulp.src(src).pipe(babel()).pipe(uglify())
       .pipe(concat('layui.all.js', {newLine: ''}))
       .pipe(header.apply(null, note))
     .pipe(gulp.dest('./'+ dir));
@@ -106,7 +107,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     src.push((ver ? '!' : '') + './src/**/mobile/layim-mobile.js');
     src.push('./src/lay/modules/mobile.js');
     
-    return gulp.src(src).pipe(uglify())
+    return gulp.src(src).pipe(babel()).pipe(uglify())
       .pipe(concat('mobile.js', {newLine: ''}))
       .pipe(header.apply(null, note))
     .pipe(gulp.dest('./'+ dir + '/lay/modules/'));
@@ -160,13 +161,7 @@ var argv = require('minimist')(process.argv.slice(2), {
     gulp.src(src).pipe(rename({}))
     .pipe(gulp.dest('./'+ dir));
   }
-  
-  //复制发行的引导文件
-  ,release: function(){
-    gulp.src('./release/doc/**/*')
-    .pipe(gulp.dest(releaseDir));
-  }
-};
+}
 
 //清理
 gulp.task('clear', function(cb) {
@@ -176,6 +171,7 @@ gulp.task('clearRelease', function(cb) {
   return del([releaseDir], cb);
 });
 
+// 有个先后顺序问题，我觉得应该先转再压缩再打包，完美！！！
 gulp.task('minjs', task.minjs);
 gulp.task('alljs', task.alljs);
 gulp.task('mobile', task.mobile);
