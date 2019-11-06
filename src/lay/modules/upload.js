@@ -230,10 +230,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
           layui.each(options.data, function (key, value) {
             value = typeof value === 'function' ? value() : value;
             formData.append(key, value);
-          });  
-          if ((options.fileId !== undefined)&&(options.serverUrl !== undefined)) {
-            console.log('进来了');
-            options.saveUrl = options.url;  //要找个变量放他
+          });
+          if ((options.fileId !== undefined) && (options.serverUrl !== undefined)) {
+            options.saveUrl = options.url; //要找个变量放他
             options.url = options.serverUrl;
           }
           //提交文件
@@ -338,7 +337,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
           }
         };
         $.ajax({
-          url: options.serverUrl+ '?fileId=' + res.data,
+          url: options.serverUrl + '?fileId=' + res.data,
           type: 'get',
           contentType: false,
           processData: false,
@@ -369,13 +368,16 @@ layui.define(['layer', 'laytpl'], function (exports) {
                   url: result.data.url,
                   name: String(value)
                 }
-                var template = '<span style="display:block;margin:5px;" id="fileNameEchoDisplay">' +
+                var template = '<span style="display:block;margin:5px;transition:height 0.5s ease,margin 0.5s ;" id="fileNameEchoDisplay">' +
                   '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
                   '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
                 laytpl(template).render(templateDate, function (html) {
+                  // options.elem.parent().height =  options.elem.parent().height*1.25;
                   options.elem.before(html);
                   // 绑定删除事件
-                  deleteEchoDisplay();
+                 
+                    deleteEchoDisplay();
+                 
                 });
               }
             }
@@ -386,7 +388,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
             error(index);
           }
         });
-        typeof options.urlCallback=== 'function' && options.urlCallback(res, index || 0, function (files) {
+        typeof options.urlCallback === 'function' && options.urlCallback(res, index || 0, function (files) {
           that.upload(files);
         });
       },
@@ -395,12 +397,24 @@ layui.define(['layer', 'laytpl'], function (exports) {
         // 绑定删除事件
         $(options.deleteBtnId).unbind('click');
         $(options.deleteBtnId).on("click", function () {
-          $("#fileNameEchoDisplay").remove();
+          console.log( $('#fileNameEchoDisplay'));
+          $('#fileNameEchoDisplay').addClass('layui-anim-fadeout');
+          $('#fileNameEchoDisplay').on('animationend', function() {
+            $('#fileNameEchoDisplay').css({'height':'0','margin':'0'});
+            // setTimeout(function() {
+            //   $('#fileNameEchoDisplay').remove();
+            // },0)
+          })
+          $('#fileNameEchoDisplay').on('transitionend', function(){
+            console.log(123);
+            $('#fileNameEchoDisplay').remove();
+          });
           typeof options.deleteEchoDisplay === 'function' && options.deleteEchoDisplay(function (files) {
             // that.upload(files);
           });
-
         });
+
+        
       },
       error = function (index) {
         if (options.auto) {
@@ -558,7 +572,6 @@ layui.define(['layer', 'laytpl'], function (exports) {
         }
         break;
     }
-    console.log(options);
     //检验文件数量
     that.fileLength = function () {
       var length = 0,

@@ -1352,7 +1352,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   0% {opacity: 1;}
   100% {opacity: 0;}
 }
-.layui-anim-fadeout{-webkit-animation-name: layui-fadeout; animation-name: layui-fadeout}
+.layui-anim-fadeout{-webkit-animation-name: layui-fadeout; animation-name: layui-fadeout; animation-duration:0.5s;animation-fill-mode: forwards;}
 /* 开始魔改！！！ */
 .layui-region {
   display: flex;
@@ -1440,8 +1440,22 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 
 .layui-form-line .layui-form-item .layui-input-upload {
+  min-height:4rem;
   border: 1px solid #e6e6e6;
+  transition: height 0.5s linear;
 }
+/* .layui-form-line .layui-form-item .layui-input-upload button:nth-child(1){
+  position:absolute;
+  bottom:0;
+  left:0;
+}
+.layui-form-line .layui-form-item .layui-input-upload button:nth-child(2){
+  position:absolute;
+  bottom:0;
+  left:3rem;
+}
+ */
+
 
 /* 魔改加入响应式 */
 /* 4 3 2 
