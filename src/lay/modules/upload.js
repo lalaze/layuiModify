@@ -74,7 +74,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
       console.log(options);
       var displayValue = options.uploaddisplay.id&&options.uploaddisplay.serverUrl?true:false;
       if (displayValue){
-        that.display();
+        that.displayCall();
       }
       that.config = $.extend({}, that.config, upload.config, options);
       that.render();
@@ -125,6 +125,14 @@ layui.define(['layer', 'laytpl'], function (exports) {
     that.file();
     that.events();
   };
+
+  Class.prototype.displayCall = function (options) {
+    var that = this,
+    options = that.config;
+    options.elem = $(options.elem);
+
+    
+  }
 
   //追加文件域
   Class.prototype.file = function () {
