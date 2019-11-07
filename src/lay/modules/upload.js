@@ -72,8 +72,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
     Class = function (options) {
       var that = this;
       console.log(options);
-      if (options.uploaddisplay.id !== '' || options.uploaddisplay.id !== undefined){
-        
+      var displayValue = options.uploaddisplay.id&&options.uploaddisplay.serverUrl?true:false;
+      if (displayValue){
+        that.display();
       }
       that.config = $.extend({}, that.config, upload.config, options);
       that.render();
