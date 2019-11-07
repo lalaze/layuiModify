@@ -1342,7 +1342,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   0% {opacity: 0;}
   100% {opacity: 1;}
 }
-.layui-anim-fadein{-webkit-animation-name: layui-fadein; animation-name: layui-fadein}
+.layui-anim-fadein{-webkit-animation-name: layui-fadein; animation-duration:0.5s;animation-name: layui-fadein}
 
 @-webkit-keyframes layui-fadeout { /* 渐隐 */
   0% {opacity: 1;}
@@ -1395,11 +1395,10 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   justify-content: flex-start;
   align-items: stretch;
   margin: 0;
-
 }
 
 .layui-form-line .layui-form-item .layui-form-label {
-  width: 20%;
+  width: 40%;
   float: none;
   background-color: #fbfbfb;
   padding: 8px 15px;
@@ -1409,37 +1408,43 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 
 .layui-form-line .layui-form-item .layui-input-block {
-  width: 80%;
+  width: 60%;
+  height: 100%;
   margin-left: 0;
   background-color: #ffffff;
 }
+/* 选了所有input了 */
+.layui-form-line .layui-form-item .layui-input{
+  height: 100%;
+}
+/* 下拉的百分百 */
+.layui-form-line .layui-form-item   .layui-form-select{
+  height: 100%;
+}
+.layui-form-line .layui-form-item   .layui-select-title{
+  height: 100%;
+}
 
-.layui-form-line .layui-form-item .layui-input-checkbox {
+.layui-form-line .layui-form-item  .layui-input-block .layui-input-checkbox {
+  height: 100%;
   border: 1px solid #e6e6e6;
 }
 
 .layui-form-line .layui-form-item .layui-input-switch {
+  height: 100%;
   border: 1px solid #e6e6e6;
 }
 
 .layui-form-line .layui-form-item .layui-input-radio {
+  height: 100%;
   border: 1px solid #e6e6e6;
 }
-
-.layui-button {
-  margin: 0.5rem;
-}
-
-.layui-button button {
-  float: right;
-  margin: 1rem;
-}
-
 .layui-btn {
   margin: 0.5rem;
 }
 
 .layui-form-line .layui-form-item .layui-input-upload {
+  height: 100%;
   min-height:4rem;
   border: 1px solid #e6e6e6;
   transition: height 0.5s linear;
@@ -1467,6 +1472,13 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 .col-12 .layui-form-item {
   width: 100%;
 }
+.col-12  .layui-form-item .layui-form-label{
+  width: 20%;
+}
+.col-12  .layui-form-item .layui-input-block{
+  width: 80%;
+}
+
 
 .col-6 {
   width: 100%;
@@ -1477,7 +1489,10 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 
 .col-6 .layui-form-item .layui-form-label {
-  width: 15%;
+  width: 30%;
+}
+.col-6 .layui-form-item .layui-form-block {
+  width: 70%;
 }
 
 .col-4 {
@@ -1489,7 +1504,10 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 
 .col-4 .layui-form-item .layui-form-label {
-  width: 10%;
+  width: 30%;
+}
+.col-4 .layui-form-item .layui-form-block {
+  width: 70%;
 }
 
 .col-3 {
@@ -1501,8 +1519,12 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 
 .col-3 .layui-form-item .layui-form-label {
-  width: 10%;
+  width: 30%;
 }
+.col-3 .layui-form-item .layui-form-block {
+  width: 70%;
+}
+
 /* 图标代码 */
 .icon {
   width: 1em; height: 1em;

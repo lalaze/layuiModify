@@ -71,6 +71,10 @@ layui.define(['layer', 'laytpl'], function (exports) {
     ,
     Class = function (options) {
       var that = this;
+      console.log(options);
+      if (options.uploaddisplay.id !== '' || options.uploaddisplay.id !== undefined){
+        
+      }
       that.config = $.extend({}, that.config, upload.config, options);
       that.render();
     };
@@ -102,6 +106,12 @@ layui.define(['layer', 'laytpl'], function (exports) {
     number: 0 //允许同时上传的文件数，默认不限制
       ,
     multiple: false //是否允许多文件上传，不支持ie8-9
+      ,
+    uploaddisplay: { //回显模块参数
+      serverUrl: '',
+      id: '',
+      deleteBtnId: '',
+    }
   };
 
   //初始渲染
@@ -373,11 +383,13 @@ layui.define(['layer', 'laytpl'], function (exports) {
                   '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
                 laytpl(template).render(templateDate, function (html) {
                   // options.elem.parent().height =  options.elem.parent().height*1.25;
+                  console.log(options.elem.parent());
+
                   options.elem.before(html);
                   // 绑定删除事件
-                 
-                    deleteEchoDisplay();
-                 
+
+                  deleteEchoDisplay();
+
                 });
               }
             }
@@ -398,25 +410,32 @@ layui.define(['layer', 'laytpl'], function (exports) {
         // 0.0
         $(options.deleteBtnId).unbind('click');
         $(options.deleteBtnId).on("click", function () {
-          $('#fileNameEchoDisplay').addClass('layui-anim-fadeout');
-          $('#fileNameEchoDisplay').on('animationend', function() {
-            $('#fileNameEchoDisplay').css({'height':'0','margin':'0'});
+          var span = $('#fileNameEchoDisplay');
+          span.removeClass('');
+          span.addClass('layui-anim-fadeout');
+          span.on('animationend', function () {
+            span.css({
+              'height': '0',
+              'margin': '0'
+            });
             // setTimeout(function() {
             //   $('#fileNameEchoDisplay').remove();
             // },0)
           })
-          $('#fileNameEchoDisplay').on('transitionend', function(){
-            console.log(123);
-            $('#fileNameEchoDisplay').remove();
+          span.on('transitionend', function () {
+            span.remove();
           });
           typeof options.deleteEchoDisplay === 'function' && options.deleteEchoDisplay(function (files) {
             // that.upload(files);
           });
         });
 
-        
+
       },
-      error = function (index) {
+      editWatchDisplay = function () {
+
+      }
+    error = function (index) {
         if (options.auto) {
           elemFile.value = '';
         }
