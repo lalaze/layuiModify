@@ -395,9 +395,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
       // 删除函数，要包含别人的那个
       deleteEchoDisplay = function () {
         // 绑定删除事件
+        // 0.0
         $(options.deleteBtnId).unbind('click');
         $(options.deleteBtnId).on("click", function () {
-          console.log( $('#fileNameEchoDisplay'));
           $('#fileNameEchoDisplay').addClass('layui-anim-fadeout');
           $('#fileNameEchoDisplay').on('animationend', function() {
             $('#fileNameEchoDisplay').css({'height':'0','margin':'0'});
