@@ -1445,7 +1445,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 
 .layui-form-line .layui-form-item .layui-input-upload {
   height: 100%;
-  min-height:4rem;
+  /* min-height:4rem; */
   border: 1px solid #e6e6e6;
   transition: height 0.5s linear;
 }

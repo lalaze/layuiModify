@@ -71,13 +71,12 @@ layui.define(['layer', 'laytpl'], function (exports) {
     ,
     Class = function (options) {
       var that = this;
-      console.log(options);
-      var displayValue = options.uploaddisplay.id&&options.uploaddisplay.serverUrl?true:false;
-      if (displayValue){
-        that.displayCall();
-      }
       that.config = $.extend({}, that.config, upload.config, options);
       that.render();
+      var displayValue = options.uploaddisplay.fileId && options.uploaddisplay.serverUrl ? true : false;
+      if (options.uploaddisplay.fileId && displayValue) {
+        that.displayCall();
+      }
     };
 
   //默认配置
@@ -110,7 +109,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
       ,
     uploaddisplay: { //回显模块参数
       serverUrl: '',
-      id: '',
+      fileId: '',
       deleteBtnId: '',
     }
   };
@@ -125,14 +124,108 @@ layui.define(['layer', 'laytpl'], function (exports) {
     that.file();
     that.events();
   };
-
+  // 添加回显
   Class.prototype.displayCall = function (options) {
-    var that = this,
-    options = that.config;
-    options.elem = $(options.elem);
+      var that = this,
+        options = that.config;
+      options.elem = $(options.elem);
 
-    
-  }
+      that.ajaxUrl();
+      // 给删除按钮添加默认方法
+
+
+    },
+    // 专门封一个访问url的方法，有复用的
+    Class.prototype.ajaxUrl = function (options, fileId) {
+
+      var that = this,
+        options = that.config;
+      options.elem = $(options.elem);
+      if (fileId) {
+        fileId = fileId;
+      } else {
+        fileId = options.uploaddisplay.fileId;
+      }
+
+      $.ajax({
+        url: options.uploaddisplay.serverUrl + '?fileId=' + fileId,
+        type: 'get',
+        contentType: false,
+        processData: false,
+        headers: options.headers || {},
+        //成功回调
+        success: function (result) {
+            if (result.code === 0) {
+              var fileLastName = String(result.data.name);
+              fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
+              // 拼个对象吧
+              if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
+                // 懒只弄一个图标
+                fileLastName = 'img';
+              }
+              var templateDate = {
+                icon: fileLastName,
+                url: result.data.url,
+                name: String(result.data.name)
+              }
+              var time = (new Date()).getTime();
+              var template = '<span class="layui-anim-fadein" style="display:block;margin:5px;transition:height 0.5s ease,margin 0.5s ;" id="fileNameEchoDisplay' + time + '">' +
+                '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
+                '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
+              laytpl(template).render(templateDate, function (html) {
+                // var div =  document.createElement('div');
+                // div.innerHTML = html;
+                // var h = div.scrollHeight;
+                // var h1 =  options.elem.parent().parent().outerHeight(true)
+                // console.log(h+h1);
+                // options.elem.parent().parent().css('height', h+h1);
+                options.elem.before(html);
+                // 绑定删除事件
+                if (options.uploaddisplay.deleteBtnId) {
+                  that.deleteEchoDisplay(options, time);
+                }
+
+                typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result);
+              });
+            }
+          }
+          //异常回调
+          ,
+        error: function () {
+          that.msg('请求上传接口出现异常');
+          error(index);
+        }
+      });
+
+    },
+    //封装一个删除绑定方法
+    Class.prototype.deleteEchoDisplay = function (options, time) {
+      var that = this,
+        options = that.config;
+      options.elem = $(options.elem);
+      // 绑定删除事件
+      $(options.uploaddisplay.deleteBtnId).unbind('click');
+      $(options.uploaddisplay.deleteBtnId).on("click", function () {
+        var span = $('#fileNameEchoDisplay' + time);
+        span.removeClass('layui-anim-fadein');
+        span.addClass('layui-anim-fadeout');
+        span.on('animationend', function () {
+          span.css({
+            'height': '0',
+            'margin': '0'
+          });
+          // setTimeout(function() {
+          //   $('#fileNameEchoDisplay').remove();
+          // },0)
+        })
+        span.on('transitionend', function () {
+          span.remove();
+        });
+        typeof options.uploaddisplay.deleteEchoDisplay === 'function' && options.uploaddisplay.deleteEchoDisplay(function (files) {});
+      });
+
+
+    }
 
   //追加文件域
   Class.prototype.file = function () {
@@ -250,10 +343,6 @@ layui.define(['layer', 'laytpl'], function (exports) {
             value = typeof value === 'function' ? value() : value;
             formData.append(key, value);
           });
-          if ((options.fileId !== undefined) && (options.serverUrl !== undefined)) {
-            options.saveUrl = options.url; //要找个变量放他
-            options.url = options.serverUrl;
-          }
           //提交文件
           $.ajax({
             url: options.url,
@@ -268,9 +357,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
             success: function (res) {
                 successful++;
                 done(index, res);
-                if (options.urlCallback !== undefined) {
+                if (options.uploaddisplay.serverUrl) {
                   urlCallback(index, res);
-                };
+                }
                 allDone();
               }
               //异常回调
@@ -355,96 +444,13 @@ layui.define(['layer', 'laytpl'], function (exports) {
             return that.msg('请对上传接口返回有效JSON');
           }
         };
-        $.ajax({
-          url: options.serverUrl + '?fileId=' + res.data,
-          type: 'get',
-          contentType: false,
-          processData: false,
-          headers: options.headers || {}
-            //成功回调
-            ,
-          success: function (result) {
-              if (result.code === 0) {
-                // 重新添加也删除
-                res.serverUrl = result;
-
-                $("#fileNameEchoDisplay").remove();
-                // 删除按钮事件以防重复绑定
-                $(options.deleteBtnId).unbind("click");
-                // 拿文件后缀名拿图标
-                value = value.length === 0 ?
-                  ((elemFile.value.match(/[^\/\\]+\..+/g) || []) || '') :
-                  value;
-                var fileLastName = String(value);
-                fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
-                // 拼个对象吧
-                if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
-                  // 懒只弄一个图标
-                  fileLastName = 'img';
-                }
-                var templateDate = {
-                  icon: fileLastName,
-                  url: result.data.url,
-                  name: String(value)
-                }
-                var template = '<span style="display:block;margin:5px;transition:height 0.5s ease,margin 0.5s ;" id="fileNameEchoDisplay">' +
-                  '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
-                  '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
-                laytpl(template).render(templateDate, function (html) {
-                  // options.elem.parent().height =  options.elem.parent().height*1.25;
-                  console.log(options.elem.parent());
-
-                  options.elem.before(html);
-                  // 绑定删除事件
-
-                  deleteEchoDisplay();
-
-                });
-              }
-            }
-            //异常回调
-            ,
-          error: function () {
-            that.msg('请求上传接口出现异常');
-            error(index);
-          }
-        });
-        typeof options.urlCallback === 'function' && options.urlCallback(res, index || 0, function (files) {
-          that.upload(files);
-        });
+        if (res.code === 0) {
+          that.ajaxUrl(options, res.data);
+          typeof options.uploaddisplay.idCallback === 'function' && options.uploaddisplay.idCallback(res, function (files) {});
+        }
       },
       // 删除函数，要包含别人的那个
-      deleteEchoDisplay = function () {
-        // 绑定删除事件
-        // 0.0
-        $(options.deleteBtnId).unbind('click');
-        $(options.deleteBtnId).on("click", function () {
-          var span = $('#fileNameEchoDisplay');
-          span.removeClass('');
-          span.addClass('layui-anim-fadeout');
-          span.on('animationend', function () {
-            span.css({
-              'height': '0',
-              'margin': '0'
-            });
-            // setTimeout(function() {
-            //   $('#fileNameEchoDisplay').remove();
-            // },0)
-          })
-          span.on('transitionend', function () {
-            span.remove();
-          });
-          typeof options.deleteEchoDisplay === 'function' && options.deleteEchoDisplay(function (files) {
-            // that.upload(files);
-          });
-        });
-
-
-      },
-      editWatchDisplay = function () {
-
-      }
-    error = function (index) {
+      error = function (index) {
         if (options.auto) {
           elemFile.value = '';
         }
@@ -628,7 +634,6 @@ layui.define(['layer', 'laytpl'], function (exports) {
       if (limitSize) return that.msg('文件不能超过' + limitSize);
     }
     send();
-    deleteEchoDisplay();
   };
 
   //重置方法
