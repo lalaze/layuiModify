@@ -688,6 +688,7 @@ Class.pt.callback = function(){
   });
 
   config.end && (ready.end[that.index] = config.end);
+  console.log(123);
 };
 
 //for ie6 恢复select

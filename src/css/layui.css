@@ -1449,6 +1449,10 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   border: 1px solid #e6e6e6;
   transition: height 0.5s linear;
 }
+.layui-form-line .layui-form-item .layui-card {
+  width: 100%;
+}
+
 /* .layui-form-line .layui-form-item .layui-input-upload button:nth-child(1){
   position:absolute;
   bottom:0;
