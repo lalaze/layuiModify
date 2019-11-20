@@ -156,6 +156,10 @@ layui.define(['layer', 'laytpl'], function (exports) {
         //成功回调
         success: function (result) {
             if (result.code === 0) {
+              if (options.multiple !== true) {
+                options.elem.prev().remove();
+              }
+
               var fileLastName = String(result.data.name);
               fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
               // 拼个对象吧
@@ -168,21 +172,14 @@ layui.define(['layer', 'laytpl'], function (exports) {
                 url: result.data.url,
                 name: String(result.data.name)
               }
-              var time = (new Date()).getTime();
-              var template = '<span class="layui-anim-fadein" style="display:block;margin:5px;transition:height 0.5s ease,margin 0.5s ;" id="fileNameEchoDisplay' + time + '">' +
+              var template = '<span name="fileNameEchoDisplay" class="upload-display layui-anim-fadein"  id="fileNameEchoDisplay' + fileId + '">' +
                 '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
                 '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
               laytpl(template).render(templateDate, function (html) {
-                // var div =  document.createElement('div');
-                // div.innerHTML = html;
-                // var h = div.scrollHeight;
-                // var h1 =  options.elem.parent().parent().outerHeight(true)
-                // console.log(h+h1);
-                // options.elem.parent().parent().css('height', h+h1);
                 options.elem.before(html);
                 // 绑定删除事件
                 if (options.uploaddisplay.deleteBtnId) {
-                  that.deleteEchoDisplay(options, time);
+                  that.deleteEchoDisplay(options, fileId);
                 }
 
                 typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result);
@@ -199,34 +196,51 @@ layui.define(['layer', 'laytpl'], function (exports) {
 
     },
     //封装一个删除绑定方法
-    Class.prototype.deleteEchoDisplay = function (options, time) {
+    Class.prototype.deleteEchoDisplay = function (options, fileId) {
       var that = this,
         options = that.config;
       options.elem = $(options.elem);
       // 绑定删除事件
       $(options.uploaddisplay.deleteBtnId).unbind('click');
-      $(options.uploaddisplay.deleteBtnId).on("click", function () {
-        var span = $('#fileNameEchoDisplay' + time);
-        span.removeClass('layui-anim-fadein');
-        span.addClass('layui-anim-fadeout');
-        span.on('animationend', function () {
-          span.css({
-            'height': '0',
-            'margin': '0'
-          });
-          // setTimeout(function() {
-          //   $('#fileNameEchoDisplay').remove();
-          // },0)
-        })
-        span.on('transitionend', function () {
-          span.remove();
+      if (options.multiple === true) {
+        $(options.uploaddisplay.deleteBtnId).on("click", function () {
+          options.elem.parent().find('span').each(function () {
+            var _this = $(this);
+            _this.removeClass('layui-anim-fadein');
+            _this.addClass('layui-anim-fadeout');
+            _this.on('animationend', function () {
+              _this.css({
+                'height': '0',
+                'margin': '0'
+              });
+            })
+            _this.on('transitionend', function () {
+              _this.remove();
+            });
+          })
+          typeof options.uploaddisplay.deleteEchoDisplay === 'function' && options.uploaddisplay.deleteEchoDisplay(function (files) {});
         });
-        typeof options.uploaddisplay.deleteEchoDisplay === 'function' && options.uploaddisplay.deleteEchoDisplay(function (files) {});
-      });
-
-
+      } else {
+        $(options.uploaddisplay.deleteBtnId).on("click", function () {
+          var span = $('#fileNameEchoDisplay' + fileId);
+          span.removeClass('layui-anim-fadein');
+          span.addClass('layui-anim-fadeout');
+          span.on('animationend', function () {
+            span.css({
+              'height': '0',
+              'margin': '0'
+            });
+            // setTimeout(function() {
+            //   $('#fileNameEchoDisplay').remove();
+            // },0)
+          })
+          span.on('transitionend', function () {
+            span.remove();
+          });
+          typeof options.uploaddisplay.deleteEchoDisplay === 'function' && options.uploaddisplay.deleteEchoDisplay(function (files) {});
+        });
+      }
     }
-
   //追加文件域
   Class.prototype.file = function () {
     var that = this,

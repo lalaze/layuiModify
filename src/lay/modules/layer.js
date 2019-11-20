@@ -656,6 +656,9 @@ Class.pt.callback = function(){
   function cancel(){
     var close = config.cancel && config.cancel(that.index, layero);
     close === false || layer.close(that.index);
+    if (config.refresh == true) {
+      window.location.reload()
+    }
   }
   
   //右上角关闭回调
@@ -686,9 +689,8 @@ Class.pt.callback = function(){
       }, 100);
     }
   });
-
-  config.end && (ready.end[that.index] = config.end);
-  console.log(123);
+ 
+config.end && (ready.end[that.index] = config.end);
 };
 
 //for ie6 恢复select
@@ -926,6 +928,9 @@ layer.close = function(index){
       layero[0].innerHTML = '';
       layero.remove();
     }
+    // if (config.refresh ===  true){
+    //   console.log('关');
+    // }
     typeof ready.end[index] === 'function' && ready.end[index]();
     delete ready.end[index];
   };

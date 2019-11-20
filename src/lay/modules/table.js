@@ -874,7 +874,6 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
       options.HAS_SET_COLS_PATCH || that.setColsPatch();
       options.HAS_SET_COLS_PATCH = true;
     };
-    
     table.cache[that.key] = data; //记录数据
     
     //显示隐藏分页栏

@@ -1439,7 +1439,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   height: 100%;
   border: 1px solid #e6e6e6;
 }
-.layui-btn {
+.layui-form-line  .layui-form-item  .layui-btn {
   margin: 0.5rem;
 }
 
@@ -1451,6 +1451,13 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 .layui-form-line .layui-form-item .layui-card {
   width: 100%;
+}
+
+/* 上传回显组件 */
+.upload-display{
+  display:block;
+  margin:5px;
+  transition:height 0.5s ease,margin 0.5s ;
 }
 
 /* .layui-form-line .layui-form-item .layui-input-upload button:nth-child(1){
