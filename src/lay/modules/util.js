@@ -154,7 +154,34 @@ layui.define('jquery', function(exports){
         ,that.digit(date.getMinutes())
         ,that.digit(date.getSeconds())
       ];
+     
+      format = format || 'yyyy-MM-dd HH:mm:ss';
 
+      return format.replace(/yyyy/g, ymd[0])
+      .replace(/MM/g, ymd[1])
+      .replace(/dd/g, ymd[2])
+      .replace(/HH/g, hms[0])
+      .replace(/mm/g, hms[1])
+      .replace(/ss/g, hms[2]);
+    }
+    ,toDateString2: function(time, format){
+      var that = this;
+      if (!time) {
+        return '';
+      }else {
+        var date = new Date(time || new Date());
+      }
+      var ymd = [
+        that.digit(date.getFullYear(), 4)
+        ,that.digit(date.getMonth() + 1)
+        ,that.digit(date.getDate())
+      ];
+      var hms = [
+        that.digit(date.getHours())
+        ,that.digit(date.getMinutes())
+        ,that.digit(date.getSeconds())
+      ];
+     
       format = format || 'yyyy-MM-dd HH:mm:ss';
 
       return format.replace(/yyyy/g, ymd[0])

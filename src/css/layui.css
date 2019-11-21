@@ -1381,9 +1381,9 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 
 .layui-form-line {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
   box-sizing: border-box;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -1409,7 +1409,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 
 .layui-form-line .layui-form-item .layui-input-block {
   width: 60%;
-  height: 100%;
+  /* height: 100%; */
   margin-left: 0;
   background-color: #ffffff;
 }
@@ -1478,10 +1478,15 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 */
 .col-12 {
   width: 100%;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
 }
 
 .col-12 .layui-form-item {
-  width: 100%;
+  /* width: 100%;
+   */
+   width:100%;
 }
 .col-12  .layui-form-item .layui-form-label{
   width: 20%;
@@ -1493,46 +1498,58 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 
 .col-6 {
   width: 100%;
+  display: grid;
+  grid-template-columns: 49% 49%;
+  grid-template-rows: 100%;
+  grid-column-gap: 2%;
 }
 
 .col-6 .layui-form-item {
-  width: 50%;
+  width: 100%;
 }
 
 .col-6 .layui-form-item .layui-form-label {
   width: 30%;
 }
-.col-6 .layui-form-item .layui-form-block {
+.col-6 .layui-form-item .layui-input-block {
   width: 70%;
 }
 
 .col-4 {
   width: 100%;
+  display: grid;
+  grid-template-columns: 32% 32% 32%;
+  grid-template-rows: 100%;
+  grid-column-gap: 2%;
 }
 
 .col-4 .layui-form-item {
-  width: 33.3333%;
+  width: 100%;
 }
 
 .col-4 .layui-form-item .layui-form-label {
   width: 30%;
 }
-.col-4 .layui-form-item .layui-form-block {
+.col-4 .layui-form-item .layui-input-block {
   width: 70%;
 }
 
 .col-3 {
   width: 100%;
+  display: grid;
+  grid-template-columns: 23.5% 23.5% 23.5% 23.5%;
+  grid-template-rows: 100%;
+  grid-column-gap: 2%;
 }
 
 .col-3 .layui-form-item {
-  width: 25%;
+  width: 100%;
 }
 
 .col-3 .layui-form-item .layui-form-label {
   width: 30%;
 }
-.col-3 .layui-form-item .layui-form-block {
+.col-3 .layui-form-item .layui-input-block {
   width: 70%;
 }
 
