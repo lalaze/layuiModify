@@ -1583,7 +1583,59 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
       ,field = othis.parent().data('field')
       ,index = othis.parents('tr').eq(0).data('index')
       ,data = table.cache[that.key][index];
-      
+      // console.log(that);
+      //  this 是一个input
+      // console.log(that); 全局对象
+      // console.log(othis); 这个框的对象 
+      // console.log(value); 值
+      // console.log(field); 属性名
+      // console.log(index); 
+      // console.log(data); 这一行的data
+      var verifyConfig = {
+        verify: {
+          required: [
+            /[\S]+/
+            ,'必填项不能为空'
+          ]
+          ,phone: [
+            /^1\d{10}$/
+            ,'请输入正确的手机号'
+          ]
+          ,email: [
+            /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+            ,'邮箱格式不正确'
+          ]
+          ,url: [
+            /(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/
+            ,'链接格式不正确'
+          ]
+          ,number: function(value){
+            if(!value || isNaN(value)) return '只能填写数字'
+          }
+          ,date: [
+            /^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/
+            ,'日期格式不正确'
+          ]
+          ,identity: [
+            /(^\d{15}$)|(^\d{17}(x|X|\d)$)/
+            ,'请输入正确的身份证号'
+          ]
+        }
+      };
+      var column = othis.parent().data('key').charAt((othis.parent().data('key')).length - 1);
+      var verifyRule = that.config.cols[0][column].verify;
+      var  verifyRules = verifyRule.split('|');
+      if (verifyRule) {
+        for (var i = 0;i < verifyRules.length;i ++){
+          var verifyName = verifyRules[i];
+          if (!((verifyConfig.verify[verifyName][0]).test(value))){
+            layer.msg(verifyConfig.verify[verifyName][1]);
+            this.value = "";
+            return false;
+          }
+        }
+      }
+
       data[field] = value; //更新缓存中的值
       
       layui.event.call(this, MOD_NAME, 'edit('+ filter +')', commonMember.call(this, {
@@ -1591,6 +1643,7 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
         ,field: field
       }));
     }).on('blur', '.'+ELEM_EDIT, function(){
+      //   失去焦点事件
       var templet
       ,othis = $(this)
       ,thisElem = this
