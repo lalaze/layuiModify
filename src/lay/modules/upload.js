@@ -74,6 +74,9 @@ layui.define(['layer', 'laytpl'], function (exports) {
       that.config = $.extend({}, that.config, upload.config, options);
       that.render();
       var displayValue = options.uploaddisplay.fileId && options.uploaddisplay.serverUrl ? true : false;
+      if (!(options.uploaddisplay.fileId)) {
+        that.idNull();
+      }
       if (options.uploaddisplay.fileId && displayValue) {
         that.displayCall();
       }
@@ -130,10 +133,30 @@ layui.define(['layer', 'laytpl'], function (exports) {
         options = that.config;
       options.elem = $(options.elem);
 
+
       that.ajaxUrl();
       // 给删除按钮添加默认方法
 
+    },
+    Class.prototype.idNull = function (options) {
+      var that = this,
+        options = that.config;
+      options.elem = $(options.elem);
 
+      options.elem.parent().find('span').each(function () {
+        var _this = $(this);
+        _this.removeClass('layui-anim-fadein');
+        _this.addClass('layui-anim-fadeout');
+        _this.on('animationend', function () {
+          _this.css({
+            'height': '0',
+            'margin': '0'
+          });
+        })
+        _this.on('transitionend', function () {
+          _this.remove();
+        });
+      })
     },
     // 专门封一个访问url的方法，有复用的
     Class.prototype.ajaxUrl = function (options, fileId) {
@@ -141,6 +164,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
       var that = this,
         options = that.config;
       options.elem = $(options.elem);
+
       if (fileId) {
         fileId = fileId;
       } else {

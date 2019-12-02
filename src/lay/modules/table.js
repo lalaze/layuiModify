@@ -1242,6 +1242,8 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
     that.layFixRight.css('right', scollWidth - 1); 
   };
 
+
+
   //事件处理
   Class.prototype.events = function(){
     var that = this
@@ -1474,8 +1476,15 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
       return $.extend({
         tr: tr //行元素
         ,data: table.clearCacheKey(data) //当前行数据
+        ,index:index
         ,del: function(){ //删除行数据
-          table.cache[that.key][index] = [];
+          // table.cache[that.key][index] = [];
+          table.cache[that.key].splice(index,1);
+          var data = table.cache[that.key];
+          table.reload(that.key,{
+            data:data,
+            url:''
+          });
           tr.remove();
           that.scrollPatch();
         }
@@ -1624,17 +1633,20 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
       };
       var column = othis.parent().data('key').charAt((othis.parent().data('key')).length - 1);
       var verifyRule = that.config.cols[0][column].verify;
-      var  verifyRules = verifyRule.split('|');
-      if (verifyRule) {
-        for (var i = 0;i < verifyRules.length;i ++){
-          var verifyName = verifyRules[i];
-          if (!((verifyConfig.verify[verifyName][0]).test(value))){
-            layer.msg(verifyConfig.verify[verifyName][1]);
-            this.value = "";
-            return false;
+      if (verifyRule){
+        var  verifyRules = verifyRule.split('|');
+        if (verifyRule) {
+          for (var i = 0;i < verifyRules.length;i ++){
+            var verifyName = verifyRules[i];
+            if (!((verifyConfig.verify[verifyName][0]).test(value))){
+              layer.msg(verifyConfig.verify[verifyName][1]);
+              this.value = "";
+              return false;
+            }
           }
         }
       }
+     
 
       data[field] = value; //更新缓存中的值
       
@@ -2011,6 +2023,8 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
     
     return thisTable.call(that);
   };
+
+
  
   //核心入口
   table.render = function(options){
