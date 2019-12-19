@@ -631,7 +631,8 @@ layui.define('layer', function(exports){
       ,verType = othis.attr('lay-verType') //提示方式
       ,value = othis.val();
       
-      othis.removeClass(DANGER); //移除警示样式
+      // othis.removeClass(DANGER); //移除警示样式
+      othis.parent().removeClass(DANGER)
       
       //遍历元素绑定的验证规则
       layui.each(vers, function(_, thisVer){
@@ -672,8 +673,8 @@ layui.define('layer', function(exports){
                 item.focus(); 
               }, 7);
             }
-            
-            othis.addClass(DANGER);
+            // othis.addClass(DANGER);
+            othis.parent().addClass(DANGER);
             return stop = true;
           }
         }

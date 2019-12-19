@@ -208,6 +208,32 @@ layui.define('jquery', function(exports){
         obj[key] && obj[key].call(this, othis);
       });
     }
+
+    ,idCard:function(id,callback) {
+      $('#'+id).on('click',function() {
+        $.ajax({
+          type:'GET',
+          url:'http://127.0.0.1:24010/ZKIDROnline/info',
+          data:{},
+          dataType:'json',
+          success:function (data) {
+            if (data.ret === 0) {
+              $.ajax({
+                type:'GET',
+                dataType:'text',
+                url:'http://127.0.0.1:24010/ZKIDROnline/ScanReadIdCardInfo',
+                data:{'OP-DEV': 1, 'CMD-URL': 4, 'REPEAT': 1, 'READTYPE': 1},
+                async:false,
+                success:function(data) {
+                  callback && callback()
+                }
+              })
+            }
+          }
+
+        })
+      })
+    }
   };
   
   //监听 DOM 尺寸变化，该创意来自：http://benalman.com/projects/jquery-resize-plugin/
