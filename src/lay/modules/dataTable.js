@@ -134,17 +134,23 @@ layui.define(['jquery','laytpl'],function(exports){
       var index = $(this).parent().parent().attr("id").split("-")[1];
       dataTable.cache[tableId.replace('#','')].splice(index,1)
 
+       // 删除样式
+       $(this).parent().parent().remove();
+
       // 缓存index减少一，所有行id更新
-      
-      
-      // 删除样式
-      $(this).parent().parent().remove();
+      dataTable.index[tableId.replace('#','')] = dataTable.index[tableId.replace('#','')] - 1;
+      $(tableId+' table tbody tr[id]').each(function(index) {
+        $(this).attr("id",tableId.replace('#','')+'-'+index)
+      })
     })
     // 修改时对应修改缓存中的值
-    $(tableId).on('blur','td',function() {
-      var index = $(this).parent().attr("id").split("-")[1];
-      var name = $(this).attr("id").split("-")[0];
-      dataTable.cache[tableId.replace('#','')][index][name] =  $(this).text();
+    $(tableId).on('blur','td',function(e) {
+      // 删除样式的时候也会触发光标消失时间
+      if (e.target.nodeName.toLowerCase() !== "button") {
+        var index = $(this).parent().attr("id").split("-")[1];
+        var name = $(this).attr("id").split("-")[0];
+        dataTable.cache[tableId.replace('#','')][index][name] =  $(this).text();
+      }
     })
   }
 
