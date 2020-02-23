@@ -2023,8 +2023,6 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
     
     return thisTable.call(that);
   };
-
-
  
   //核心入口
   table.render = function(options){

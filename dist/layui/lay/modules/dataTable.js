@@ -1,0 +1,2 @@
+/** layui-v2.5.5 MIT License By https://www.layui.com */
+ ;layui.define(["jquery","laytpl"],function(a){var e=layui.$;layui.laytpl;dataTable={},Class=function(a){var l=this;l.config=e.extend({},a),l.render()},Class.prototype.render=function(){alert("啦啦泽牛皮")},dataTable.render=function(a){var e=new Class(a);return console.log(a),e},a("dataTable",dataTable)});
