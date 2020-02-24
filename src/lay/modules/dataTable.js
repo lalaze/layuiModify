@@ -1,6 +1,6 @@
-layui.define(['jquery','laytpl'],function(exports){
+layui.define(['jquery',"laydate"],function(exports){
   var $ = layui.$;
-  var laytpl = layui.laytpl;
+  var laydate = layui.laydate
 
   // 渲染模板
 
@@ -33,15 +33,19 @@ layui.define(['jquery','laytpl'],function(exports){
   // 表身初始渲染
   TABLE_BODY = function(data,cols,name) {
     var template = ''
-    var editArray = function() {
-      var text = []
-      for (var i = 0;i < cols.length;i++) {
-        if (cols[i]['edit']) {
-          text.push(cols[i]['field'])
-        }
+    // 循环装配需要的组件
+    var editArray = [];
+    var dateArray = [];
+    for (var i = 0;i < cols.length;i++) {
+      if (cols[i]['edit']) {
+        editArray.push(cols[i]['field'])
       }
-      return text
-    }();
+      if (cols[i]['date']) {
+        dateArray.push(cols[i]['field'])
+      }
+    }
+    
+    console.log(dateArray)
     for (var i = 0;i < data.length;i++) {
       template += '<tr id="'+name+'-'+i+'">';   
       for (var key in data[i]) {
@@ -85,6 +89,7 @@ layui.define(['jquery','laytpl'],function(exports){
   }
 
   // 一些特殊各自的组装模板
+  // 日历模板
   
   // 总体组装返回
   TABLE_ALL = function (options){
@@ -96,6 +101,7 @@ layui.define(['jquery','laytpl'],function(exports){
   dataTable={
     cache:{}, //数据缓存
     index:{}, //目前行数
+    date:[], //当前日历组件id
   }
   
   // 构造器
@@ -126,8 +132,7 @@ layui.define(['jquery','laytpl'],function(exports){
   }
   // 绑定每行的删除方法与改变方法
   Class.prototype.deleteAndEdit = function(tableId) {
-    // 事件代理
-
+    // 事件代理的写法
     // 删除一行
     $(tableId).on('click','button',function() {
       // 删除缓存数据

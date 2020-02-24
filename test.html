@@ -41,10 +41,11 @@
             elem: '#test1',
             add:"#add1",
             width:'700px',
-            data: [{name:'1',post:'2',authorizedSignatureArea:'3'},{name:'4',post:'4',authorizedSignatureArea:'4'}],
+            data: [{name:'1',post:'2',authorizedSignatureArea:'3',date:"日期"},{name:'4',post:'4',authorizedSignatureArea:'4',date:"日期"}],
             cols: [
                 {field:'name',title:'姓名',width:'150px',edit:true},
                 {field:'post',title:'职位',width:'150px'},
+                {field:'date',title:'日期',width:'150px',date:true},
                 {field:'authorizedSignatureArea',title:'授权签字领域'}
             ]
         })
