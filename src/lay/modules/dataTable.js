@@ -277,7 +277,7 @@ layui.define(['jquery','laydate','upload'],function(exports){
         var id = $(this).children(':first').attr("id"); //取input框的id
         // 光标移除事件触发的时候，框内的值还没开始赋值，应延迟执行取值赋值，考虑卡顿，为100ms
         setTimeout(function(){
-          lay('#'+id).each(function(i,item,){
+          lay('#'+id).each(function(i,item){
             dataTable.cache[tableId.replace('#','')][index][name] = item.value;
             console.log( dataTable.cache[tableId.replace('#','')])
           }) 
