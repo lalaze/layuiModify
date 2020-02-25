@@ -1398,7 +1398,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 
 .layui-form-line .layui-form-item {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start; 
   align-items: stretch;
   margin: 0;
 }

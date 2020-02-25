@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link  rel="stylesheet" href="./src/css/layui.css">
     <title>Document</title>
+    <style>
+
+    </style>
 </head>
 <body>
     <div class="layui-form">
@@ -35,6 +38,28 @@
     <div id="test2"></div>
 
     <div id="tttt"></div>
+
+    <div class="layui-region">
+        <label class="layui-region-title">人员职称证书</label>
+        <div class="layui-form-line col-12">
+            <div class="layui-form-item" >
+                <!-- <div class="layui-card" > -->
+                    <!-- <div class="layui-card-body"> -->
+                        <!-- <div style="height: 36px">
+                            <button type="button" class="layui-btn table-btn" style="float: right;margin: 6px 10px;height: 30px;line-height: 30px" data-type="addTesterTitleCertificate" id="addTesterTitleCertificate">添加人员职称证书</button>
+                        </div> -->
+                    <!-- <div style=" display: flex;
+                    justify-content: flex-start; 
+                    align-items: stretch;
+                    margin: 0;">  -->
+                        <div id="testerTitleCertificateTable" style="width: 100%;"></div>
+                    <!-- </div> -->
+                    <!-- </div> -->
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+
     <script src="./src/layui.js"></script>
     <script>
     layui.use("dataTable",function() {
@@ -42,26 +67,39 @@
         dataTable.render({
             elem: '#test1',
             add:"#add1",
-            width:'1000px',
-            data: [{name:'1',post:'2',authorizedSignatureArea:'3',date:'',file:''},{name:'4',post:'4',authorizedSignatureArea:'4',date:'',file:''}],
+            data: [{name:'1',post:'2',authorizedSignatureArea:'3',date:'',edate:'',file:''},{name:'4',post:'4',authorizedSignatureArea:'4',date:'',edate:'',file:''}],
             cols: [
                 {field:'name',title:'姓名',width:'150px',edit:true},
                 {field:'post',title:'职位',width:'150px'},
                 {field:'authorizedSignatureArea',title:'授权签字领域'},
                 {field:'date',title:'日期',date:true},
+                {field:'edate',title:'日期',date:true},
                 {field:'file',title:'上传',upload:true}
             ]
         })
-        dataTable.render({
-            elem: '#test2',
-            width:'700px',
-            data: [{name:'1',post:'2',authorizedSignatureArea:'3'},{name:'',post:'',authorizedSignatureArea:''}],
-            cols: [
-                {field:'name',title:'姓名',width:'150px',edit:true},
-                {field:'post',title:'职位',width:'150px'},
-                {field:'authorizedSignatureArea',title:'授权签字领域'},
-            ]
-        })
+        // dataTable.render({
+        //     elem: '#test2',
+        //     width:'700px',
+        //     data: [{name:'1',post:'2',authorizedSignatureArea:'3'},{name:'',post:'',authorizedSignatureArea:''}],
+        //     cols: [
+        //         {field:'name',title:'姓名',width:'150px',edit:true},
+        //         {field:'post',title:'职位',width:'150px'},
+        //         {field:'authorizedSignatureArea',title:'授权签字领域'},
+        //     ]
+        // })
+        // dataTable.render({
+        //     elem: '#testerTitleCertificateTable',
+        //     add:"#addTesterTitleCertificate",
+        //     data:[{title:'',certificateNo:'',licensingAuthority:'',licensingDate:'',validDate:'',certificateFile:''}],
+        //     cols: [
+        //         {field:'title',title:'职称'},
+        //         {field:'certificateNo', edit:true,title:'职称证书编号'},
+        //         {field:'licensingAuthority', edit: true,title:'发证机关'},
+        //         {field:'licensingDate', title:'发证日期',date:true},
+        //         {field:'validDate', title:'有效日期',date:true},
+        //         {field:'certificateFile',title:'职称证书附件'}
+        //     ]
+        // })
 
         // console.log(lay('#date-0')['val']('123456'))
         console.log(dataTable)

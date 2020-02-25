@@ -3,6 +3,57 @@ layui.define(['jquery','laydate','upload'],function(exports){
   var laydate = layui.laydate;
   var upload = layui.upload;
 
+  // 外部接口
+  dataTable={
+    cache:{}, //数据缓存
+    index:{}, //目前行数
+    Render:{
+      date:{},
+      upload:{},
+    } //渲染数组缓存
+  }
+  /* 
+    要说明一下render的设置，本意是缓存当前的渲染id，然后index不管他继续往前加，反正我改数据的时候是拿tr的行数的，独立出来，但是没有考虑到同一个表格有两个date的情况
+    date:{
+      表格名：{
+        字段名：{
+          data：[],
+          index:个数
+        }
+      }
+    }
+    同理upload也是
+    upload:{
+      表格名：{
+        字段名：{
+          data：[],
+          index:个数
+        }
+      }
+    }
+    因此很有必要单独写一个写缓存的方法
+  */
+
+  // 写入render数据，data加一或者index加一（单加的时候就不管data了）
+  WRITE_RENDERDATA = function(tableName,type,key,num,flag) {
+    if (flag) { //初始渲染
+      if (!(dataTable.Render[type][tableName])) {
+        dataTable.Render[type][tableName]={};
+      }
+      if (!(dataTable.Render[type][tableName][key])) {
+        dataTable.Render[type][tableName][key]={};
+        dataTable.Render[type][tableName][key].data=[];
+        dataTable.Render[type][tableName][key].index = 0;
+        dataTable.Render[type][tableName][key].data.push(key+'-'+num)     
+      } else {
+        dataTable.Render[type][tableName][key].data.push(key+'-'+num)
+        dataTable.Render[type][tableName][key].index =  dataTable.Render[type][tableName][key].index + 1;
+      }
+    } else { //单加，index加一
+      dataTable.Render[type][tableName][key].index =  dataTable.Render[type][tableName][key].index + 1;
+    } 
+  }
+
   // 渲染模板
   
   // 组装一个要特别渲染的对象
@@ -56,7 +107,7 @@ layui.define(['jquery','laydate','upload'],function(exports){
       for (var key in data[i]) {
         template += TABLE_TEMPLATE(name,allTemplate,key,i,data[i])
       }
-      template += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" tableId="delete">删除</button></td>'
+      template += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" tableId="delete" style="margin:0;">删除</button></td>'
       template += '</tr>';
       // 设置缓存index
       dataTable.index[name] = i;
@@ -73,9 +124,9 @@ layui.define(['jquery','laydate','upload'],function(exports){
     
     template += '<tr id="'+name+'-'+dataTable.index[name]+'">'
     for (var key in data[0]) {
-      template += TABLE_TEMPLATE(name,allTemplate,key,dataTable.index[name],{})
+      template += TABLE_TEMPLATE(name,allTemplate,key,dataTable.index[name],"")
     }
-    template += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger  tableId="delete"">删除</button></td>'
+    template += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger  tableId="delete" style="margin:0;">删除</button></td>'
     template += '</tr>'
     // template = "{{# layui.each(d.data,function(index,item){ }}" + "{{# layui.each(item,function(name,value){ }}"+ '<td style = "height:20px;">{{value}}</td>' +
     // "{{#  }); }}"+"{{#  }); }}"
@@ -88,19 +139,16 @@ layui.define(['jquery','laydate','upload'],function(exports){
     // value="{{layui.util.toDateString2(d.licensingDate,'yyyy-MM-dd','enterpriseQualificationTable',d.LAY_TABLE_INDEX,'licensingDate')}}"
     if (tobject[key]) {
       if (tobject[key]['edit'] == true ) {
-        return '<td style = "height:20px;" contentEditable="true" tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
+        return '<td contentEditable="true" tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
       }else if (tobject[key]['date'] == true ) {
         // 缓存渲染id与个数
-        if (dataTable.Render.date[name]) {
-          dataTable.Render.date[name].push(key+'-'+i)
-          dataTable.Render.date[name+"-index"] =  dataTable.Render.date[name+"-index"] + 1;
+        if (data) {
+          WRITE_RENDERDATA(name,'date',key,i,true)
+          return '<td style="padding:0;" tableId="'+key+'"><input style="border:none;" type="text" class="layui-input" value="" id="'+key+'-'+i+'" autocomplete="off"></input></td>'
         } else {
-          dataTable.Render.date[name] = [key+'-'+i];
-          // 初始化组件index
-          dataTable.Render.date[name+"-index"] = 0
+          WRITE_RENDERDATA(name,'date',key,i,false)
+          return '<td style="padding:0;" tableId="'+key+'"><input style="border:none;" type="text" class="layui-input" value="" id="'+key+'-'+ dataTable.Render.date[name][key].index+'" autocomplete="off"></input></td>'
         }
-        // 日期要i区分渲染
-        return '<td style="padding:0;" tableId="'+key+'"><input style="border:none;" type="text" class="layui-input" value="" id="'+key+'-'+dataTable.Render.date[name+"-index"]+'" autocomplete="off"></input></td>'
       } else if (tobject[key]['upload'] == true ) {
         // <button id="tableUpload{{d.LAY_TABLE_INDEX}}" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button>
         // 缓存渲染id与个数
@@ -112,10 +160,10 @@ layui.define(['jquery','laydate','upload'],function(exports){
           // 初始化组件index
           dataTable.Render.upload[name+"-index"] = 0
         }
-        return '<td style = "height:20px;" tableId="'+key+'"><button id="'+key+'-'+dataTable.Render.upload[name+"-index"]+'" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button> </td>'
+        return '<td  tableId="'+key+'"><button id="'+key+'-'+dataTable.Render.upload[name+"-index"]+'" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button> </td>'
       }
     } else {
-      return '<td style = "height:20px;" tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
+      return '<td tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
     }
   }
   
@@ -123,18 +171,6 @@ layui.define(['jquery','laydate','upload'],function(exports){
   TABLE_ALL = function (options){
     return result  = ' <table class="layui-table" style="width:'+options.width+'">' + 
     TABLE_HEAD(options.cols) +TABLE_BODY(options.data,options.cols,options.elem.replace('#',''))+ '</table>'
-  }
-
-  // 外部接口
-  dataTable={
-    cache:{}, //数据缓存
-    index:{}, //目前行数
-    Render:{
-      date:{
-        // index:"" //表格渲染后就算删除了可以改变id，但是组件不可以，保持一个叠加把，然后再写入dateid的时候一起写了
-      },
-      upload:{},
-    } //渲染数组缓存
   }
   
   // 构造器
@@ -144,9 +180,7 @@ layui.define(['jquery','laydate','upload'],function(exports){
 
     // 缓存初始数据
     dataTable.cache[options.elem.replace('#','')] =options.data;
-
     that.render(options.elem,TABLE_ALL(options));
-    
     that.add(options)
     that.deleteAndEdit(options.elem)
   };
@@ -154,30 +188,33 @@ layui.define(['jquery','laydate','upload'],function(exports){
   Class.prototype.render  = function(id,template){
     var that = this;
     $(id).append(template);
-    if (dataTable.Render.date[id.replace("#", "")+"-index"]) { // 有日期index再渲染
+    if (dataTable.Render.date[id.replace("#","")]) { 
       that.dateRender(id.replace('#',''),false)
     }
-    if (dataTable.Render.upload[id.replace("#", "")+"-index"]) {
-      that.uploadRender(id.replace('#',''),false)
-    }
-   
+    // if (dataTable.Render.upload[id.replace("#", "")+"-index"]) {
+    //   that.uploadRender(id.replace('#',''),false)
+    // }
   }
   // 添加之后执行日期渲染方法
   Class.prototype.dateRender = function(tableName,sigin) {
     // 数组渲染为一整个list渲染，如果传入了一个单个渲染标志，就走单个渲染
-    if (sigin === false) { //if 是排除了没有日期的情况，就不用渲染了
-      for (var i = 0;i < dataTable.Render.date[tableName].length;i++) {
-        laydate.render({
-          elem: '#'+dataTable.Render.date[tableName][i],
-          trigger: 'click'
-        });
+    if (sigin === false) { 
+      for (var key in dataTable.Render.date[tableName]) {
+        for (var i = 0;i<dataTable.Render.date[tableName][key].data.length;i++) {
+          laydate.render({
+            elem: '#'+dataTable.Render.date[tableName][key].data[i],
+            trigger: 'click'
+          });
+        }
       }
     } else if (sigin) {
       // 去缓存取最新的渲染  注意是date的缓存index
-      laydate.render({
-        elem: '#'+dataTable.Render.date[tableName][0].split('-')[0]+'-'+dataTable.Render.date[tableName+"-index"],
-        trigger: 'click'
-      });
+      for (var key in dataTable.Render.date[tableName]) {
+          laydate.render({
+            elem: '#'+dataTable.Render.date[tableName][key].data[0].split('-')[0]+'-'+dataTable.Render.date[tableName][key].index,
+            trigger: 'click'
+          });
+      }
     }
   }
   // 上传组件渲染方法
@@ -214,7 +251,7 @@ layui.define(['jquery','laydate','upload'],function(exports){
                   
               },
               urlCallback:function (res) {
-                  
+
               },
             }
           });
@@ -230,7 +267,7 @@ layui.define(['jquery','laydate','upload'],function(exports){
       var template = TABLE_ONE(options.data,options.cols,options.elem.replace('#',''))
       $(options.elem + ' table').append(template);
       // 渲染组件
-      if (dataTable.Render.date[options.elem.replace("#", "")+"-index"]) { // 有日期index再渲染
+      if (dataTable.Render.date[options.elem.replace('#','')]) { // 有日期index再渲染
         that.dateRender(options.elem.replace('#',''),true);
       }
       if (dataTable.Render.upload[options.elem.replace("#", "")+"-index"]) {
