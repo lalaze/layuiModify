@@ -128,20 +128,16 @@ layui.define(['jquery','laydate','upload'],function(exports){
     }
     template += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger  tableId="delete" style="margin:0;">删除</button></td>'
     template += '</tr>'
-    // template = "{{# layui.each(d.data,function(index,item){ }}" + "{{# layui.each(item,function(name,value){ }}"+ '<td style = "height:20px;">{{value}}</td>' +
-    // "{{#  }); }}"+"{{#  }); }}"
-    // template = laytpl(ttt).render({"data":data});
     return template
   }
 
   // 组装模板
   TABLE_TEMPLATE = function (name,tobject,key,i,data) {
-    // value="{{layui.util.toDateString2(d.licensingDate,'yyyy-MM-dd','enterpriseQualificationTable',d.LAY_TABLE_INDEX,'licensingDate')}}"
     if (tobject[key]) {
       if (tobject[key]['edit'] == true ) {
         return '<td contentEditable="true" tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
       }else if (tobject[key]['date'] == true ) {
-        // 缓存渲染id与个数
+        // 缓存
         if (data) {
           WRITE_RENDERDATA(name,'date',key,i,true)
           return '<td style="padding:0;" tableId="'+key+'"><input style="border:none;" type="text" class="layui-input" value="" id="'+key+'-'+i+'" autocomplete="off"></input></td>'
@@ -150,17 +146,13 @@ layui.define(['jquery','laydate','upload'],function(exports){
           return '<td style="padding:0;" tableId="'+key+'"><input style="border:none;" type="text" class="layui-input" value="" id="'+key+'-'+ dataTable.Render.date[name][key].index+'" autocomplete="off"></input></td>'
         }
       } else if (tobject[key]['upload'] == true ) {
-        // <button id="tableUpload{{d.LAY_TABLE_INDEX}}" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button>
-        // 缓存渲染id与个数
-        if (dataTable.Render.upload[name]) {
-          dataTable.Render.upload[name].push(key+'-'+i)
-          dataTable.Render.upload[name+"-index"] =  dataTable.Render.upload[name+"-index"] + 1;
+        if (data) {
+          WRITE_RENDERDATA(name,'upload',key,i,true)
+          return '<td  tableId="'+key+'"><button id="'+key+'-'+i+'" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button> </td>'
         } else {
-          dataTable.Render.upload[name] = [key+'-'+i];
-          // 初始化组件index
-          dataTable.Render.upload[name+"-index"] = 0
-        }
-        return '<td  tableId="'+key+'"><button id="'+key+'-'+dataTable.Render.upload[name+"-index"]+'" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button> </td>'
+          WRITE_RENDERDATA(name,'upload',key,i,false)
+          return '<td  tableId="'+key+'"><button id="'+key+'-'+dataTable.Render.upload[name][key].index+'" class="layui-btn layui-btn-xs" type="button" style="margin:0;display: inline-block;">上传</button> </td>'
+        }      
       }
     } else {
       return '<td tableId="'+key+'">'+(data[key] ? data[key]:"")+'</td>'
@@ -191,13 +183,13 @@ layui.define(['jquery','laydate','upload'],function(exports){
     if (dataTable.Render.date[id.replace("#","")]) { 
       that.dateRender(id.replace('#',''),false)
     }
-    // if (dataTable.Render.upload[id.replace("#", "")+"-index"]) {
-    //   that.uploadRender(id.replace('#',''),false)
-    // }
+    if (dataTable.Render.upload[id.replace('#','')]) {
+      that.uploadRender(id.replace('#',''),false)
+    }
   }
-  // 添加之后执行日期渲染方法
+  
+  // 日期渲染方法,分初始的列表渲染与单个渲染
   Class.prototype.dateRender = function(tableName,sigin) {
-    // 数组渲染为一整个list渲染，如果传入了一个单个渲染标志，就走单个渲染
     if (sigin === false) { 
       for (var key in dataTable.Render.date[tableName]) {
         for (var i = 0;i<dataTable.Render.date[tableName][key].data.length;i++) {
@@ -217,30 +209,13 @@ layui.define(['jquery','laydate','upload'],function(exports){
       }
     }
   }
+
   // 上传组件渲染方法
   Class.prototype.uploadRender = function(tableName,sigin) {
     if (sigin) {
-      upload.render({
-        elem:'#'+dataTable.Render.upload[tableName][0].split('-')[0]+'-'+dataTable.Render.date[tableName+"-index"],
-        url: '${ctx}/laboratory/minioFileController/uploadFileAndAdd',
-        data: {
-            'bucketName': 'zsjcz-image'
-        },
-        uploaddisplay: {
-            serverUrl: '${ctx}/laboratory/minioFileController/getObject',
-            idCallback:function (res) { //url的回调
-                
-            },
-            urlCallback:function (res) {
-                
-            },
-          }
-        });
-
-    } else {
-      for (var i = 0;i < dataTable.Render.upload[tableName].length;i++) {
+      for (var key in dataTable.Render.upload[tableName]) {
         upload.render({
-          elem:'#'+dataTable.Render.upload[tableName][i],
+          elem:'#'+dataTable.Render.upload[tableName][key].data[0].split('-')[0]+'-'+dataTable.Render.upload[tableName][key].index,
           url: '${ctx}/laboratory/minioFileController/uploadFileAndAdd',
           data: {
               'bucketName': 'zsjcz-image'
@@ -251,13 +226,35 @@ layui.define(['jquery','laydate','upload'],function(exports){
                   
               },
               urlCallback:function (res) {
-
+                  
               },
             }
+        });
+      }
+    } else {
+      for (var key in dataTable.Render.upload[tableName]) {
+        for (var i = 0;i<dataTable.Render.upload[tableName][key].data.length;i++) {
+          upload.render({
+            elem:'#'+dataTable.Render.upload[tableName][key].data[i],
+            url: '${ctx}/laboratory/minioFileController/uploadFileAndAdd',
+            data: {
+                'bucketName': 'zsjcz-image'
+            },
+            uploaddisplay: {
+                serverUrl: '${ctx}/laboratory/minioFileController/getObject',
+                idCallback:function (res) { //url的回调
+                    
+                },
+                urlCallback:function (res) {
+  
+                },
+              }
           });
+        }
       }
     }
   }
+
   // 绑定按钮添加方法
   Class.prototype.add = function(options) {
     var that = this;
@@ -267,16 +264,17 @@ layui.define(['jquery','laydate','upload'],function(exports){
       var template = TABLE_ONE(options.data,options.cols,options.elem.replace('#',''))
       $(options.elem + ' table').append(template);
       // 渲染组件
-      if (dataTable.Render.date[options.elem.replace('#','')]) { // 有日期index再渲染
+      if (dataTable.Render.date[options.elem.replace('#','')]) { 
         that.dateRender(options.elem.replace('#',''),true);
       }
-      if (dataTable.Render.upload[options.elem.replace("#", "")+"-index"]) {
+      if (dataTable.Render.upload[options.elem.replace('#','')]) {
         that.uploadRender(options.elem.replace('#',''),true)
       }
       // 缓存中新加一行
       dataTable.cache[options.elem.replace('#','')][dataTable.index[[options.elem.replace('#','')]]] = {};
     })
   }
+  
   // 绑定每行的删除方法与改变方法
   Class.prototype.deleteAndEdit = function(tableId) {
     // 事件代理
