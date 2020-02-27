@@ -205,8 +205,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
                 if (options.uploaddisplay.deleteBtnId) {
                   that.deleteEchoDisplay(options, fileId);
                 }
-
-                typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result);
+                typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result,options.elem);
               });
             }
           }
@@ -484,7 +483,7 @@ layui.define(['layer', 'laytpl'], function (exports) {
         };
         if (res.code === 0) {
           that.ajaxUrl(options, res.data);
-          typeof options.uploaddisplay.idCallback === 'function' && options.uploaddisplay.idCallback(res, function (files) {});
+          typeof options.uploaddisplay.idCallback === 'function' && options.uploaddisplay.idCallback(res,that.config.elem,function (files) {});
         }
       },
       // 删除函数，要包含别人的那个

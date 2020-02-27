@@ -1465,6 +1465,14 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   margin:5px;
   transition:height 0.5s ease,margin 0.5s ;
 }
+/*表格的*/
+table .upload-display {
+  display:inline-block;
+  margin:5px;
+  margin-top: 0;
+  margin-bottom: 0;
+  transition:height 0.5s ease,margin 0.5s ;
+}
 
 /* .layui-form-line .layui-form-item .layui-input-upload button:nth-child(1){
   position:absolute;
