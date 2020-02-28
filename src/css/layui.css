@@ -1411,6 +1411,11 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   border-top: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
   border-left: 1px solid#e6e6e6;
+
+  /* 垂直居中试试 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .layui-form-line .layui-form-item .layui-input-block {
