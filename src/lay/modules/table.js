@@ -772,11 +772,20 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
         
         if(item1.length === 0) return;
         
+        for (var key in item1) {
+          if (typeof(item1[key]) == "string") {
+            if (item1[key].indexOf('<') > -1 || item1[key].indexOf('>') > -1) {
+              item1[key] = item1[key].replace('<','&lt;').replace('>','&gt;');
+            }
+          }    
+        }
+        
         if(!sort){
           item1[table.config.indexName] = i1;
         }
         
         that.eachCols(function(i3, item3){
+          // item3 cols的内容
           var field = item3.field || i3
           ,key = options.index + '-' + item3.key
           ,content = item1[field];
