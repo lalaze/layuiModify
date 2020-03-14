@@ -1425,16 +1425,25 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
   background-color: #ffffff;
 }
 /* 选了所有input了 */
-/* .layui-form-line .layui-form-item .layui-input{
+.layui-form-line .layui-form-item .layui-input{
   height: 100%;
 }
+/* 2020.3.6 */
+.layui-form-line .layui-form-item  .layui-input-block .layui-input{
+  height: 100%;
+}
+
 /* 下拉的百分百 */
-/* .layui-form-line .layui-form-item   .layui-form-select{
+ .layui-form-line .layui-form-item   .layui-form-select{
   height: 100%;
-} */
-/* .layui-form-line .layui-form-item   .layui-select-title{
+} 
+ .layui-form-line .layui-form-item   .layui-select-title{
   height: 100%;
-}  */
+}  
+/* 2020.3.6 */
+.layui-form-line .layui-form-item   .layui-select-title input{
+  height: 100%;
+}  
 
 .layui-form-line .layui-form-item  .layui-input-block .layui-input-checkbox {
   height: 100%;

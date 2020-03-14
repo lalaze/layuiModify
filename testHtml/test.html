@@ -13,105 +13,231 @@
 </head>
 
 <body>
-    先引用全版的方便测试，后面才引入压缩版，100多m的静态文件呢
-    <br>
-    <h2>适用于录入重复数据的场景</h2>
-    <button type="button" class="layui-btn" id="add1">添加一行</button>
-    <div id="test1"></div>
-
-    <h2>动态缓存展示</h2>
-    <div id="cache"></div>
-
-    <table class="layui-table">
-        <tr>
-            <th>123456</th>
-        </tr>
-        <tr>
-            <td type="text" id="testg"></td>
-        </tr>
-    </table>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-region">
+            <label class="layui-region-title">嘤嘤嘤嘤</label>
+    
+            <div class="layui-form-line col-12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">输入框</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required lay-verify="required" placeholder="请输入标题"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="layui-form-line col-12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" required lay-verify="required"
+                               autocomplete="off" class="layui-input" id="testDate">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="layui-form-line col-6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择框</label>
+                    <div class="layui-input-block">
+                        <select name="city" lay-verify="required">
+                            <option value=""></option>
+                            <option value="0">北京</option>
+                            <option value="1">上海</option>
+                            <option value="2">广州</option>
+                            <option value="3">深圳</option>
+                            <option value="4">杭州</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码框</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+    
+    
+    
+            <div class="layui-form-line col-4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">复选框</label>
+                    <div class="layui-input-block layui-input-checkbox">
+                        <input type="checkbox" name="like[write]" title="写作">
+                        <input type="checkbox" name="like[read]" title="阅读" checked>
+                        <input type="checkbox" name="like[dai]" title="发呆">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">开关</label>
+                    <div class="layui-input-block layui-input-switch">
+                        <input type="checkbox" name="switch" lay-skin="switch">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单选框</label>
+                    <div class="layui-input-block layui-input-radio">
+                        <input type="radio" name="sex" value="男" title="男">
+                        <input type="radio" name="sex" value="女" title="女" checked>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="layui-form-line col-3">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">文本域</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">文本域</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">文本域</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">文本域</label>
+                    <div class="layui-input-block">
+                        <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-line col-12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上传</label>
+                    <div class="layui-input-block layui-input-upload">
+                        <button id="test1" class="layui-btn" type="button">上传</button>
+                        <button id="test11"  type="button" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-line col-12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">修改回显</label>
+                    <div class="layui-input-block layui-input-upload">
+                        <button id="test2" class="layui-btn" type="button">上传</button>
+                        <button id="test22"  type="button" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-line col-12">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">查看回显</label>
+                    <div class="layui-input-block layui-input-upload">
+                        <button style="display:none;" id="test3" class="layui-btn" type="button">上传</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="layui-form-item table-button">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="sub">立即提交</button>
+                <button type="button" class="layui-btn layui-btn-danger" id="resetButton">重置</button>
+            </div>
+        </div>
+    </form>
+   
     <script src="../src/layui.js"></script>
     <!-- <script src="..//xm-select.js"></script> -->
     <script>
-        layui.use(["dataTable", "laydate"], function () {
-            var dataTable = layui.dataTable;
-            var laydate = layui.laydate;
+        layui.use(['upload', 'form','laydate','jquery'], function () {
+        var upload = layui.upload;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var $ = layui.jquery;
 
+        $('#resetButton').on('click', function () {
+            layer.confirm('确认重置吗', function (index) {
+                $('#form')[0].reset();
+                layui.form.render();
+                $("[name='fileNameEchoDisplay']").each(function(){
+                    $(this).remove();
+                });
 
-            laydate.render({
-                elem: '#testg' //指定元素
+                //清空上传
+                layer.close(index);
             });
-
-            // ToString = function (obj) {
-            //     var str = '{'
-            //     for (var tmp in obj) {
-            //         if (typeof obj[tmp] === 'object')
-            //             str += tmp + ':' + ToString(obj[tmp]) + ','
-            //         else
-            //             str += tmp + ':"' + obj[tmp] + '",'
-            //     }
-            //     console.log(str + '}')
-            //     return str + '}'
-            // }
-
-            // Object.defineProperty(dataTable.cache, 'test1', {
-            //     set: function (newVal) {
-            //         document.getElementById('cache').innerHTML = ToString(newVal);
-            //     }
-            // });
-
-
-            // dataTable.render({
-            //     elem: '#test1',
-            //     add: "#add1", //添加方式的id，会默认绑定添加事件
-            //     // 有url会自动请求，没有就看有没有data，都没有就是只有表头的空表格
-            //     url: "${ctx}/demo/example/zezeze/dataTable/data",
-            //     //数据返回格式最好时下面这种
-            //     // data: [{name:'1',post:'2',authorizedSignatureArea:'3',date:'',edate:'',file:''},{name:'4',post:'4',authorizedSignatureArea:'4',date:'',edate:'',file:''}],
-            //     upload: { // 如果有上传组件，要写上传组件的url
-            //         bucketName: 'cen',
-            //         url: "${ctx}/demo/cen/minioFile/uploadFileAndAdd",
-            //         serverUrl: "${ctx}/demo/cen/minioFile/getObject"
-            //     },
-            //     cols: [ //取消了原本layui的双层方括号了
-            //         // edit为true开启编辑，同理date开启日历，upload开启上传
-            //         {
-            //             field: 'name',
-            //             title: '姓名',
-            //             width: '150px',
-            //             edit: true
-            //         },
-            //         {
-            //             field: 'post',
-            //             title: '职位',
-            //             width: '150px'
-            //         },
-            //         {
-            //             field: 'authorizedSignatureArea',
-            //             title: '授权签字领域',
-            //             width: '150px'
-            //         },
-            //         {
-            //             field: 'date',
-            //             title: '日期',
-            //             date: true,
-            //             width: '150px'
-            //         },
-            //         {
-            //             field: 'edate',
-            //             title: '日期',
-            //             date: true,
-            //             width: '150px'
-            //         },
-            //         {
-            //             field: 'file',
-            //             title: '上传',
-            //             upload: true
-            //         }
-            //     ]
-            // })
         })
+
+        laydate.render({
+            elem: '#testDate' //或 elem: document.getElementById('test')、elem: lay('#test') 等
+        });
+
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: '${ctx}/demo/cen/minioFile/uploadFileAndAdd',
+            data: {
+                'bucketName': 'cen'
+            },
+            accept:'file',
+            multiple:true,
+            uploaddisplay: {
+                serverUrl: '${ctx}/demo/cen/minioFile/getObject',
+                idCallback:function (res) { //url的回调
+                    console.log(res);
+                },
+                urlCallback: function (res) { //serverurl的回调
+                    console.log(res);
+                },
+                // 删除办法
+                deleteBtnId: '#test11',
+                deleteEchoDisplay: function () { //删除方法回调
+                    console.log(456);
+                }
+            }
+        });
+
+        var uploadInst1 = upload.render({
+            elem: '#test2',
+            url: '${ctx}/demo/cen/minioFile/uploadFileAndAdd',
+            data: {
+                'bucketName': 'cen'
+            },
+            uploaddisplay: {
+                serverUrl: '${ctx}/demo/cen/minioFile/getObject',
+                fileId:'3681',
+                idCallback:function (res) { //url的回调
+                    console.log(res);
+                },
+                urlCallback: function (res) {  //serverurl的回调
+                    console.log(res);
+                },
+                // 删除办法
+                deleteBtnId: '#test22',
+                deleteEchoDisplay: function () { //删除方法回调
+                    console.log(456);
+                }
+            }
+        });
+
+        var uploadInst2 = upload.render({
+            elem: '#test3',
+            data: {
+                'bucketName': 'cen'
+            },
+            uploaddisplay: {
+                serverUrl: '${ctx}/demo/cen/minioFile/getObject',
+                fileId:'3681',
+                urlCallback: function (res) {  //serverurl的回调
+                    console.log(res);
+                },
+            }
+        });
+    })
     </script>
+    
 </body>
 
 </html>
