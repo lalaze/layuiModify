@@ -598,13 +598,19 @@ hr, .layui-timeline-item:before{background-color: #e6e6e6;}
 /* 分割块 */.layui-form-mid{position: relative; float: left; display: block; padding: 9px 0 !important; line-height: 20px; margin-right: 10px;}
 /* 警告域 */.layui-form-danger:focus
 ,.layui-form-danger+.layui-form-select .layui-input{border-color: #FF5722 !important;}
-.layui-form-danger{
+/* .layui-form-danger{ */
+  /* border:1px solid #FF5722 !important;
+  border-color: #FF5722 !important; */
+/* }    */
+
+/* 上面那个写法会与下面加的样式有冲突，就是应该是input自己的边框变红才对 */
+.layui-form-danger .layui-input {
   border:1px solid #FF5722 !important;
   border-color: #FF5722 !important;
-}   
+}
+
+
 /* 上面那句啦啦泽加的 */
-
-
 
 /* 下拉选择 */.layui-form-select{position: relative;}
 .layui-form-select .layui-input{padding-right: 30px; cursor: pointer;}
@@ -1426,11 +1432,11 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }
 /* 选了所有input了 */
 .layui-form-line .layui-form-item .layui-input{
-  height: 100%;
+  /* height: 100%; */
 }
 /* 2020.3.6 */
 .layui-form-line .layui-form-item  .layui-input-block .layui-input{
-  height: 100%;
+  /* height: 100%; */
 }
 
 /* 下拉的百分百 */
@@ -1442,7 +1448,7 @@ body .layui-util-face  .layui-layer-content{padding:0; background-color:#fff; co
 }  
 /* 2020.3.6 */
 .layui-form-line .layui-form-item   .layui-select-title input{
-  height: 100%;
+  /* height: 100%; */
 }  
 
 .layui-form-line .layui-form-item  .layui-input-block .layui-input-checkbox {
@@ -1515,12 +1521,14 @@ table .upload-display {
   /* width: 100%;
    */
    width:100%;
+   height: auto;
 }
 .col-12  .layui-form-item .layui-form-label{
   width: 20%;
 }
 .col-12  .layui-form-item .layui-input-block{
   width: 80%;
+  /* height: 100%; */
 }
 
 
@@ -1534,6 +1542,7 @@ table .upload-display {
 
 .col-6 .layui-form-item {
   width: 100%;
+  height: auto;
 }
 
 .col-6 .layui-form-item .layui-form-label {
@@ -1541,6 +1550,7 @@ table .upload-display {
 }
 .col-6 .layui-form-item .layui-input-block {
   width: 70%;
+  /* height: 100%; */
 }
 
 .col-4 {
@@ -1553,6 +1563,7 @@ table .upload-display {
 
 .col-4 .layui-form-item {
   width: 100%;
+  height: auto;
 }
 
 .col-4 .layui-form-item .layui-form-label {
@@ -1560,6 +1571,7 @@ table .upload-display {
 }
 .col-4 .layui-form-item .layui-input-block {
   width: 70%;
+  /* height: 100%; */
 }
 
 .col-3 {
@@ -1572,6 +1584,7 @@ table .upload-display {
 
 .col-3 .layui-form-item {
   width: 100%;
+  height: auto;
 }
 
 .col-3 .layui-form-item .layui-form-label {
@@ -1579,6 +1592,7 @@ table .upload-display {
 }
 .col-3 .layui-form-item .layui-input-block {
   width: 70%;
+  /* height: 100%; */
 }
 
 /* 图标代码 */

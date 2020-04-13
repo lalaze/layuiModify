@@ -1487,13 +1487,13 @@ layui.define(['laytpl', 'laypage', 'layer', 'form', 'util'], function(exports){
         ,data: table.clearCacheKey(data) //当前行数据
         ,index:index
         ,del: function(){ //删除行数据
-          // table.cache[that.key][index] = [];
-          table.cache[that.key].splice(index,1);
-          var data = table.cache[that.key];
-          table.reload(that.key,{
-            data:data,
-            url:''
-          });
+          table.cache[that.key][index] = [];
+          // table.cache[that.key].splice(index,1);
+          // var data = table.cache[that.key];
+          // table.reload(that.key,{
+          //   data:data,
+          //   url:''
+          // });
           tr.remove();
           that.scrollPatch();
         }
