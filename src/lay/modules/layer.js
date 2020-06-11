@@ -928,9 +928,6 @@ layer.close = function(index){
       layero[0].innerHTML = '';
       layero.remove();
     }
-    // if (config.refresh ===  true){
-    //   console.log('关');
-    // }
     typeof ready.end[index] === 'function' && ready.end[index]();
     delete ready.end[index];
   };

@@ -8,8 +8,8 @@
 
 layui.define('jquery', function(exports){
   "use strict";
-  var $ = layui.jquery
 
+  var $ = layui.jquery
   //外部接口
   ,slider = {
     config: {}
@@ -178,13 +178,14 @@ layui.define('jquery', function(exports){
 
     //划过滑块显示数值
     that.elemTemp.find('.' + SLIDER_WRAP_BTN).on('mouseover', function(){
+      window.hasMove=true;
       var sliderWidth = options.type === 'vertical' ? options.height : that.elemTemp[0].offsetWidth
       ,sliderWrap = that.elemTemp.find('.' + SLIDER_WRAP)
       ,tipsLeft = options.type === 'vertical' ? (sliderWidth - $(this).parent()[0].offsetTop - sliderWrap.height()) : $(this).parent()[0].offsetLeft
       ,left = tipsLeft / sliderWidth * 100
       ,value = $(this).parent().data('value')
       ,tipsTxt = options.setTips ? options.setTips(value) : value;
-      that.elemTemp.find('.' + SLIDER_TIPS).html(tipsTxt);
+      that.elemTemp.find('.' + SLIDER_TIPS).html(tipsTxt); // 改
       if(options.type === 'vertical'){
         that.elemTemp.find('.' + SLIDER_TIPS).css({"bottom":left + '%', "margin-bottom":"20px", "display":"inline-block"});
       }else{
@@ -227,7 +228,7 @@ layui.define('jquery', function(exports){
       firLeft = firLeft > 100 ? 100: firLeft;
       secLeft = secLeft > 100 ? 100: secLeft;
       var minLeft = Math.min(firLeft, secLeft)
-      ,wrapWidth = Math.abs(firLeft - secLeft);
+      var wrapWidth = Math.abs(firLeft - secLeft);
       if(options.type === 'vertical'){
         sliderAct.find('.' + SLIDER_BAR).css({"height":wrapWidth + '%', "bottom":minLeft + '%'});
       }else{
@@ -279,9 +280,13 @@ layui.define('jquery', function(exports){
 
     //滑块滑动
     sliderAct.find('.' + SLIDER_WRAP_BTN).each(function(index){
+      
       var othis = $(this);
       othis.on('mousedown', function(e){
+        window.hasMove=false;
         e = e || window.event;
+
+        
         
         var oldleft = othis.parent()[0].offsetLeft
         ,oldx = e.clientX;
@@ -307,8 +312,11 @@ layui.define('jquery', function(exports){
           sliderAct.find('.' + SLIDER_TIPS).hide();
         };
         
+        options.mousedownCallback && options.mousedownCallback();
+        
         createMoveElem(move, up)
       });
+
     });
     
     //点击滑块

@@ -7163,6 +7163,9 @@ jQuery.extend( {
 	},
 
 	css: function( elem, name, extra, styles ) {
+		// console.log('-------------------')
+		// console.log(name)
+		
 		var num, val, hooks,
 			origName = jQuery.camelCase( name );
 
@@ -7194,6 +7197,8 @@ jQuery.extend( {
 			num = parseFloat( val );
 			return extra === true || isFinite( num ) ? num || 0 : val;
 		}
+		// console.log(val)
+		// console.log('-------------------')
 		return val;
 	}
 } );
@@ -10900,7 +10905,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 
 					// As of 5/8/2012 this will yield incorrect results for Mobile Safari, but there
 					// isn't a whole lot we can do. See pull request at this URL for discussion:
-					// https://github.com/jquery/jquery/pull/764
+					// https://github.com/jquery/jquery/pull/76
 					return elem.document.documentElement[ "client" + name ];
 				}
 
@@ -10912,6 +10917,7 @@ jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
 					// whichever is greatest
 					// unfortunately, this causes bug #3838 in IE6/8 only,
 					// but there is currently no good, small way to fix it.
+					
 					return Math.max(
 						elem.body[ "scroll" + name ], doc[ "scroll" + name ],
 						elem.body[ "offset" + name ], doc[ "offset" + name ],

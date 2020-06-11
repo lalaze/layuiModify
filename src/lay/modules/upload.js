@@ -132,11 +132,14 @@ layui.define(['layer', 'laytpl'], function (exports) {
       var that = this,
         options = that.config;
       options.elem = $(options.elem);
-
-
-      that.ajaxUrl();
-      // 给删除按钮添加默认方法
-
+      var fileId = options.uploaddisplay.fileId.split(',')
+      if (fileId instanceof Array) {
+        fileId.forEach(function(item) {
+          that.ajaxUrl(options,item)
+        })
+      } else {
+        that.ajaxUrl(options,fileId);
+      }
     },
     Class.prototype.idNull = function (options) {
       var that = this,
@@ -180,36 +183,68 @@ layui.define(['layer', 'laytpl'], function (exports) {
         //成功回调
         success: function (result) {
             if (result.code === 0) {
+              // if (options.multiple !== true) {
+              //   options.elem.prev().remove();
+              // }
               if (options.multiple !== true) {
-                options.elem.prev().remove();
-              }
-
-              var fileLastName = String(result.data.name);
-              fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
-              // 拼个对象吧
-              if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
-                // 懒只弄一个图标
-                fileLastName = 'img';
-              }
-              var templateDate = {
-                icon: fileLastName,
-                url: result.data.url,
-                name: String(result.data.name)
-              }
-              var template = '<span name="fileNameEchoDisplay" class="upload-display layui-anim-fadein"  id="fileNameEchoDisplay' + fileId + '">' +
-                '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
-                '<a href="{{= d.url}}" target="_blank">{{=  d.name}}</a></span>';
-              laytpl(template).render(templateDate, function (html) {
-                options.elem.before(html);
-                // 绑定删除事件
-                if (options.uploaddisplay.deleteBtnId) {
-                  that.deleteEchoDisplay(options, fileId);
+                var fileLastName = String(result.data.name);
+                fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
+                // 拼个对象吧
+                if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
+                  // 懒只弄一个图标
+                  fileLastName = 'img';
                 }
-                typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result,options.elem);
-              });
+                var templateDate = {
+                  icon: fileLastName,
+                  url: result.data.url,
+                  name: String(result.data.name)
+                }
+                var template = '<span name="fileNameEchoDisplay" class="upload-display layui-anim-fadein"  id="fileNameEchoDisplay' + fileId + '">' +
+                  '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
+                  '<a href="{{= d.url}}" target="_blank" style="font-size:14px;">{{=  d.name}}</a></span>';
+                laytpl(template).render(templateDate, function (html) {
+                  // options.elem.before(html);
+                  options.elem.parent().prepend(html) 
+                  options.elem.parent().find('.layui-btn').css('visibility','hidden')
+                  options.elem.parent().find('.layui-btn-primary').css('visibility','visible')
+                  // 绑定删除事件
+                  if (options.uploaddisplay.deleteBtnId) {
+                    that.deleteEchoDisplay(options, fileId);
+                  }
+                  typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result,options.elem);
+                });
+              } else {
+                var fileLastName = String(result.data.name);
+                fileLastName = fileLastName.substring(fileLastName.length - 4, fileLastName.length + 1).replace('.', '');
+                // 拼个对象吧
+                if (/(gif|png|jpg|jpeg|webp|svg|psd|bmp|tif)$/i.test(fileLastName)) {
+                  // 懒只弄一个图标
+                  fileLastName = 'img';
+                }
+                var templateDate = {
+                  icon: fileLastName,
+                  url: result.data.url,
+                  name: String(result.data.name)
+                }
+                var template = '<div class="layui-input result" style="width:calc(100% - 64px);color:#7575a1;padding-left:10px;overflow:hidden;display:flex;align-items:center;position:relative;"><span name="fileNameEchoDisplay" class="upload-display layui-anim-fadein"  id="fileNameEchoDisplay' + fileId + '">' +
+                  '<svg class="icon" aria-hidden="true" style="font-size:16px;"><use xlink:href="#icon-{{=  d.icon}}"></use></svg>' +
+                  '<a href="{{= d.url}}" target="_blank" style="font-size:14px;">{{=  d.name}}</a><svg class="icon clickDel" aria-hidden="true" style="margin-left:0.5rem;font-size:16px;color:red;cursor:pointer;"><use xlink:href="#icon-guanbi"></use></svg></span></div>';
+                laytpl(template).render(templateDate, function (html) {
+                  // 要改变父元素的布局
+                  options.elem.parent().addClass("layui-upload-multiple")
+                  options.elem.parent().prepend(html)
+                  // 绑定删除事件
+                  if (options.uploaddisplay.deleteBtnId) {
+                    that.deleteEchoDisplay(options, fileId);
+                  }
+                  typeof options.uploaddisplay.urlCallback === 'function' && options.uploaddisplay.urlCallback(result,options.elem);
+                });
+              }
+            } else {
+              // 错误回调
+              layer.msg(result.msg,{icon:2})
             }
           }
-          //异常回调
           ,
         error: function () {
           that.msg('请求上传接口出现异常');
@@ -226,25 +261,15 @@ layui.define(['layer', 'laytpl'], function (exports) {
       // 绑定删除事件
       $(options.uploaddisplay.deleteBtnId).unbind('click');
       if (options.multiple === true) {
-        $(options.uploaddisplay.deleteBtnId).on("click", function () {
-          options.elem.parent().find('span').each(function () {
-            var _this = $(this);
-            _this.removeClass('layui-anim-fadein');
-            _this.addClass('layui-anim-fadeout');
-            _this.on('animationend', function () {
-              _this.css({
-                'height': '0',
-                'margin': '0'
-              });
-            })
-            _this.on('transitionend', function () {
-              _this.remove();
-            });
-          })
+        // 其实是重复绑定了事件器的，先这样吧
+        $(".clickDel").on('click',function(){
+          $(this).parent().parent().remove()
           typeof options.uploaddisplay.deleteEchoDisplay === 'function' && options.uploaddisplay.deleteEchoDisplay(function (files) {});
-        });
+        })
       } else {
         $(options.uploaddisplay.deleteBtnId).on("click", function () {
+          options.elem.parent().find('.layui-btn').css('visibility','visible')
+          options.elem.parent().find('.layui-btn-primary').css('visibility','hidden')
           var span = $('#fileNameEchoDisplay' + fileId);
           span.removeClass('layui-anim-fadein');
           span.addClass('layui-anim-fadeout');
@@ -287,6 +312,16 @@ layui.define(['layer', 'laytpl'], function (exports) {
       that.elemFile = options.elem, options.field = options.elem[0].name
     ) : options.elem.after(elemFile);
 
+    if (options.multiple == true) {
+      
+    } else {
+      options.elem.after('<div class="layui-input result" style="padding-left:0;color:#7575a1;overflow:hidden;display:flex;align-items:center;position:relative;"></div>')
+      if (options.uploaddisplay.deleteBtnId) {
+        options.elem.next().append($(options.uploaddisplay.deleteBtnId))
+      }
+      options.elem.next().append(options.elem)
+    }
+    
     //初始化ie8/9的Form域
     if (device.ie && device.ie < 10) {
       that.initIE();
@@ -392,12 +427,17 @@ layui.define(['layer', 'laytpl'], function (exports) {
               //成功回调
               ,
             success: function (res) {
+              if (res.code == 0) {
                 successful++;
                 done(index, res);
                 if (options.uploaddisplay.serverUrl) {
                   urlCallback(index, res);
                 }
                 allDone();
+              } else {
+                  // 错误回调
+                  layer.msg(res.msg,{icon:2})       
+              }
               }
               //异常回调
               ,
